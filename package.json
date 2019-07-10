@@ -1,0 +1,34 @@
+{
+  "name": "react-native-metrica",
+  "version": "0.0.1-alpha.4",
+  "description": "Yandex AppMetrica SDK for react-native",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doomsower/react-native-metrica.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "yandex",
+    "metrica",
+    "appmetrica",
+    "sdk",
+    "analytics",
+    "ios",
+    "android"
+  ],
+  "author": "Konstantin Kuznetsov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doomsower/react-native-metrica/issues"
+  },
+  "homepage": "https://github.com/doomsower/react-native-metrica#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "react-native": "^0.59.0"
+  }
+}
