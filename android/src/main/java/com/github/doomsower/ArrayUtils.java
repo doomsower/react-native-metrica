@@ -33,7 +33,7 @@ public class ArrayUtils {
                     jsonArray.put(i, readableArray.getString(i));
                     break;
                 case Map:
-                    jsonArray.put(i, MapUtil.toJSONObject(readableArray.getMap(i)));
+                    jsonArray.put(i, MapUtils.toJSONObject(readableArray.getMap(i)));
                     break;
                 case Array:
                     jsonArray.put(i, ArrayUtils.toJSONArray(readableArray.getArray(i)));
@@ -51,7 +51,7 @@ public class ArrayUtils {
             Object value = jsonArray.get(i);
 
             if (value instanceof JSONObject) {
-                value = MapUtil.toMap((JSONObject) value);
+                value = MapUtils.toMap((JSONObject) value);
             }
             if (value instanceof JSONArray) {
                 value = ArrayUtils.toArray((JSONArray) value);
@@ -83,7 +83,7 @@ public class ArrayUtils {
                     array[i] = readableArray.getString(i);
                     break;
                 case Map:
-                    array[i] = MapUtil.toMap(readableArray.getMap(i));
+                    array[i] = MapUtils.toMap(readableArray.getMap(i));
                     break;
                 case Array:
                     array[i] = ArrayUtils.toArray(readableArray.getArray(i));
@@ -116,7 +116,7 @@ public class ArrayUtils {
                 writableArray.pushString((String) value);
             }
             if (value instanceof Map) {
-                writableArray.pushMap(MapUtil.toWritableMap((Map<String, Object>) value));
+                writableArray.pushMap(MapUtils.toWritableMap((Map<String, Object>) value));
             }
             if (value.getClass().isArray()) {
                 writableArray.pushArray(ArrayUtils.toWritableArray((Object[]) value));
