@@ -1,6 +1,6 @@
 {
   "name": "react-native-metrica",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
   "description": "Yandex AppMetrica SDK for react-native",
   "main": "index.js",
   "types": "index.d.ts",
