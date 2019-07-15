@@ -37,8 +37,9 @@ declare module 'react-native-metrica' {
     reportReferralUrl: (url: string) => void;
     reportEvent: (name: string, params?: Record<string, any>, onError?: (e: any) => void) => void;
     reportError: (name: string, reason?: string, onError?: (e: any) => void) => void;
-    setLocation: (location: MetricaLocation) => void;
+    setLocation: (location?: MetricaLocation) => void;
     setLocationTracking: (enabled: boolean) => void;
+    setProfileID: (id: string | null) => void;
   }
 
   const metrica: RNMetrica;

@@ -78,6 +78,11 @@ RCT_EXPORT_METHOD(setLocationTracking:(NSNumber *)enabledValue)
     }
 }
 
+RCT_EXPORT_METHOD(setProfileID:(NSString *)id)
+{
+    [YMMYandexMetrica setUserProfileID:id];
+}
+
 #pragma mark - Utils
 
 + (YMMYandexMetricaConfiguration *)configurationForDictionary:(NSDictionary *)configurationDictionary

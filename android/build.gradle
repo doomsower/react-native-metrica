@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:+'
+    implementation 'com.facebook.react:react-native:+'
     // AppMetrica SDK.
     implementation 'com.yandex.android:mobmetricalib:3.6.+'
     // Optionally. Play Install Referrer library.

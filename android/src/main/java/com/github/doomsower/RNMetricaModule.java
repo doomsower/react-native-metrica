@@ -1,8 +1,13 @@
 package com.github.doomsower;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -15,12 +20,17 @@ import com.yandex.metrica.YandexMetricaConfig;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RNMetricaModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+import javax.annotation.Nullable;
+
+public class RNMetricaModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
+    private final static String TAG = RNMetricaModule.class.getCanonicalName();
 
     private boolean mAppMetricaActivated = false;
 
     public RNMetricaModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.getReactApplicationContext().addLifecycleEventListener(this);
+        this.getReactApplicationContext().addActivityEventListener(this);
     }
 
     @Override
@@ -31,6 +41,7 @@ public class RNMetricaModule extends ReactContextBaseJavaModule implements Lifec
     @ReactMethod
     private void activate(ReadableMap configMap) {
         if (mAppMetricaActivated) {
+            Log.d(TAG, "already activated");
             return;
         }
         final YandexMetricaConfig config = Utils.toConfig(configMap);
@@ -39,22 +50,30 @@ public class RNMetricaModule extends ReactContextBaseJavaModule implements Lifec
         YandexMetrica.activate(context, config);
         YandexMetrica.reportAppOpen(getCurrentActivity());
 
+        Log.d(TAG, "activated");
         mAppMetricaActivated = true;
     }
 
     @ReactMethod
-    private void reportReferralUrl(String url) {
+    private void handleOpenURL(@NonNull String url) {
+        YandexMetrica.reportAppOpen(getCurrentActivity());
+    }
+
+    @ReactMethod
+    private void reportReferralUrl(@NonNull String url) {
         YandexMetrica.reportReferralUrl(url);
     }
 
     @ReactMethod
-    private void reportEvent(String eventName, ReadableMap params, Callback errorCallback) {
+    private void reportEvent(@NonNull String eventName, @Nullable ReadableMap params, @Nullable Callback errorCallback) {
         if (params != null) {
             try {
                 JSONObject payload = MapUtils.toJSONObject(params);
                 YandexMetrica.reportEvent(eventName, payload.toString());
             } catch (JSONException e) {
-                errorCallback.invoke(e.getMessage());
+                if (errorCallback != null) {
+                    errorCallback.invoke(e.getMessage());
+                }
             }
         } else {
             YandexMetrica.reportEvent(eventName);
@@ -62,7 +81,7 @@ public class RNMetricaModule extends ReactContextBaseJavaModule implements Lifec
     }
 
     @ReactMethod
-    private void reportError(String errorName, String errorReason, Callback errorCallback) {
+    private void reportError(@NonNull String errorName, @Nullable String errorReason, @Nullable Callback errorCallback) {
         Throwable errorThrowable = null;
         try {
             errorThrowable = new Throwable(errorReason);
@@ -73,13 +92,18 @@ public class RNMetricaModule extends ReactContextBaseJavaModule implements Lifec
     }
 
     @ReactMethod
-    private void setLocation(ReadableMap locationMap) {
+    private void setProfileID(@Nullable String profileID) {
+        YandexMetrica.setUserProfileID(profileID);
+    }
+
+    @ReactMethod
+    private void setLocation(@Nullable ReadableMap locationMap) {
         final Location location = Utils.toLocation(locationMap);
         YandexMetrica.setLocation(location);
     }
 
     @ReactMethod
-    private void setLocationTracking(Boolean enabled) {
+    private void setLocationTracking(@NonNull Boolean enabled) {
         YandexMetrica.setLocationTracking(enabled);
     }
 
@@ -99,5 +123,15 @@ public class RNMetricaModule extends ReactContextBaseJavaModule implements Lifec
 
     @Override
     public void onHostDestroy() {
+    }
+
+    @Override
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        YandexMetrica.reportAppOpen(getCurrentActivity());
     }
 }
